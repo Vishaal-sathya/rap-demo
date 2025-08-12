@@ -6,6 +6,7 @@ import ComboCard from '../components/ComboCard'
 import Loader from '../components/Loader'
 import {findDirectTrains, findTwoLegCombos, calcPrice, formatINR} from '../utils'
 
+
 // Hardcoded data for stations and trains
 const hardcodedStations = [
   { id: 'ST1', name: 'Station 1' },

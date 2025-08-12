@@ -1,147 +1,94 @@
-import React, { useState, useMemo } from 'react'
-import SearchForm from '../components/SearchForm'
-import SortFilterControls from '../components/SortFilterControls'
-import TrainCard from '../components/TrainCard'
-
-// Sample train data
-const trainData = [
-  {
-    id: 1,
-    name: "Rajdhani Express",
-    trainNumber: "12001",
-    departure: "06:30",
-    arrival: "14:45",
-    distance: 1384,
-    source: "New Delhi",
-    destination: "Mumbai Central"
-  },
-  {
-    id: 2,
-    name: "Shatabdi Express",
-    trainNumber: "12002",
-    departure: "08:15",
-    arrival: "15:30",
-    distance: 956,
-    source: "New Delhi",
-    destination: "Chandigarh"
-  },
-  {
-    id: 3,
-    name: "Duronto Express",
-    trainNumber: "12259",
-    departure: "22:00",
-    arrival: "08:30",
-    distance: 1447,
-    source: "New Delhi",
-    destination: "Sealdah"
-  },
-  {
-    id: 4,
-    name: "Garib Rath",
-    trainNumber: "12204",
-    departure: "13:20",
-    arrival: "05:15",
-    distance: 1338,
-    source: "New Delhi",
-    destination: "Saharsa"
-  },
-  {
-    id: 5,
-    name: "Jan Shatabdi",
-    trainNumber: "12056",
-    departure: "11:45",
-    arrival: "18:20",
-    distance: 784,
-    source: "New Delhi",
-    destination: "Jaipur"
-  }
-]
-
-const stations = [
-  "New Delhi", "Mumbai Central", "Chandigarh", "Sealdah", 
-  "Saharsa", "Jaipur", "Chennai Central", "Bangalore City", 
-  "Hyderabad", "Pune", "Ahmedabad", "Kolkata"
-]
+import React, { useState, useEffect } from 'react';
+import SearchForm from '../components/SearchForm';
+import SortFilterControls from '../components/SortFilterControls';
+import TrainCard from '../components/TrainCard';
+import axios from 'axios';
 
 export default function TrainSearchPage() {
+  const [stations, setStations] = useState([]);
   const [searchParams, setSearchParams] = useState({
     source: '',
     destination: '',
     date: ''
-  })
-  const [sortBy, setSortBy] = useState('price_low')
-  const [hasSearched, setHasSearched] = useState(false)
+  });
+  const [sortBy, setSortBy] = useState('price'); // 'price' or 'time'
+  const [hasSearched, setHasSearched] = useState(false);
+  const [trains, setTrains] = useState([]);
 
-  const handleSearch = (params) => {
-    setSearchParams(params)
-    setHasSearched(true)
-  }
+  // Fetch stations from backend on mount
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/stations')
+      .then((response) => {
+        setStations(response.data.stations || []);
+      })
+      .catch((error) => {
+        console.error('Error fetching stations:', error);
+      });
+  }, []);
 
-  // Calculate price and filter trains
-  const filteredTrains = useMemo(() => {
-    if (!hasSearched || !searchParams.source || !searchParams.destination) {
-      return []
+  // Handle search
+  const handleSearch = async (params) => {
+    setSearchParams(params);
+    setHasSearched(true);
+
+    try {
+      const res = await axios.get('http://localhost:5000/trains/search', {
+        params: {
+          source: params.source,
+          destination: params.destination,
+          date: params.date,
+          sort_by: sortBy
+        }
+      });
+
+      setTrains(res.data.results || []);
+    } catch (err) {
+      console.error('Error fetching trains:', err);
+      setTrains([]);
     }
-    
-    return trainData.map(train => ({
-      ...train,
-      price: Math.round(train.distance * 1.25 * 100) / 100,
-      duration: calculateDuration(train.departure, train.arrival)
-    }))
-  }, [hasSearched, searchParams])
-
-  // Sort trains
-  const sortedTrains = useMemo(() => {
-    const trains = [...filteredTrains]
-    
-    switch (sortBy) {
-      case 'price_low':
-        return trains.sort((a, b) => a.price - b.price)
-      case 'price_high':
-        return trains.sort((a, b) => b.price - a.price)
-      case 'duration_low':
-        return trains.sort((a, b) => a.duration - b.duration)
-      case 'duration_high':
-        return trains.sort((a, b) => b.duration - a.duration)
-      default:
-        return trains
-    }
-  }, [filteredTrains, sortBy])
+  };
 
   return (
     <div className="page-container">
       {/* Search Form */}
       <div className="search-section">
         <h1 className="search-title">Search Trains</h1>
-        <SearchForm 
-          stations={stations}
-          onSearch={handleSearch}
-        />
+        <SearchForm stations={stations} onSearch={handleSearch} />
       </div>
-
       {/* Results Section */}
       {hasSearched && (
         <>
-          {/* Sort & Filter Controls */}
+          {/* Sort Controls */}
           <div className="results-section">
             <div className="results-header">
               <h2 className="results-title">
-                Available Trains ({sortedTrains.length})
+                Available Trains ({trains.length})
               </h2>
-              <SortFilterControls 
+              <SortFilterControls
                 sortBy={sortBy}
                 setSortBy={setSortBy}
               />
             </div>
           </div>
 
-          {/* Train Cards */}
+          {/* Train List */}
           <div className="train-list">
-            {sortedTrains.length > 0 ? (
-              sortedTrains.map(train => (
-                <TrainCard 
-                  key={train.id} 
-                  train={train}
+            {trains.length > 0 ? (
+              trains.map((train) => (
+                <TrainCard
+                  key={train.train_id}
+                  train={{
+                    id: train.train_id,
+                    name: train.train_name,
+                    departure: train.departure_time,
+                    arrival: train.arrival_time,
+                    distance: train.distance_km,
+                    price: train.price,
+                    departureDate: train.departure_date,
+                    arrivalDate: train.arrival_date,
+                    duration: train.duration
+                  }}
                   searchParams={searchParams}
                 />
               ))
@@ -159,21 +106,5 @@ export default function TrainSearchPage() {
         </>
       )}
     </div>
-  )
-}
-
-// Helper function to calculate duration in minutes
-function calculateDuration(departure, arrival) {
-  const [depHour, depMin] = departure.split(':').map(Number)
-  const [arrHour, arrMin] = arrival.split(':').map(Number)
-  
-  let depMinutes = depHour * 60 + depMin
-  let arrMinutes = arrHour * 60 + arrMin
-  
-  // Handle next day arrival
-  if (arrMinutes < depMinutes) {
-    arrMinutes += 24 * 60
-  }
-  
-  return arrMinutes - depMinutes
+  );
 }

@@ -1,10 +1,12 @@
 from flask import Flask
 from app.config import Config
 from app.extensions import mongo
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    CORS(app)
 
     # Initialize MongoDB
     mongo.init_app(app)

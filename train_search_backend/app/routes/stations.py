@@ -10,6 +10,7 @@ def get_stations():
     """
     Fetch all stations from MongoDB for dropdown.
     """
-    stations = list(mongo.db.stations.find({}, {"_id": 0}))
-    return jsonify({"stations": stations}), 200
+    stations_cursor = mongo.db.stations.find({}, {"_id": 0, "station_name": 1})
+    station_names = [s["station_name"] for s in stations_cursor]
+    return jsonify({"stations": station_names}), 200
 

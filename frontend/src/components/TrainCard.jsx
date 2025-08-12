@@ -29,7 +29,7 @@ export default function TrainCard({ train, searchParams }) {
       <div className="train-header">
         <div>
           <h3 className="train-name">{train.name}</h3>
-          <p className="train-number">#{train.trainNumber}</p>
+          <p className="train-number">#{train.id}</p>
         </div>
         <div>
           <div className="train-price">
