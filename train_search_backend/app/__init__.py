@@ -9,14 +9,17 @@ def create_app():
     # Initialize MongoDB
     mongo.init_app(app)
 
-    # # Import and register blueprints
+    # Import and register blueprints
     from app.routes.stations import stations_bp
     app.register_blueprint(stations_bp)
 
-    # from app.routes.trains import trains_bp
-    # app.register_blueprint(trains_bp)
+    from app.routes.trains import trains_bp
+    app.register_blueprint(trains_bp)
 
-    # from app.routes.admin import admin_bp
-    # app.register_blueprint(admin_bp)
+    from app.routes.admin import admin_bp
+    app.register_blueprint(admin_bp)
+
+    from app.routes.otp import otp_bp
+    app.register_blueprint(otp_bp)
 
     return app

@@ -1,4 +1,8 @@
 from flask_pymongo import PyMongo
+from flask_pymongo import PyMongo
+from flask_mail import Mail
 
-# Initialize PyMongo without attaching to app yet
 mongo = PyMongo()
+mail = Mail()
+
+
