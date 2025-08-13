@@ -19,7 +19,7 @@ def generate_otp():
     # Generate 6-digit OTP
     otp = ''.join(random.choices(string.digits, k=6))
     expiry_minutes = 5
-    expiry_time = datetime.now(datetime.timezone.utc) + timedelta(minutes=expiry_minutes)
+    expiry_time = datetime.utcnow() + timedelta(minutes=expiry_minutes)
 
     # Store OTP in MongoDB
     mongo.db.otp_codes.insert_one({

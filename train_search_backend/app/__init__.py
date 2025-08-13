@@ -1,6 +1,6 @@
 from flask import Flask
 from app.config import Config
-from app.extensions import mongo
+from app.extensions import mongo, mail
 from flask_cors import CORS
 
 def create_app():
@@ -10,6 +10,7 @@ def create_app():
 
     # Initialize MongoDB
     mongo.init_app(app)
+    mail.init_app(app)
 
     # Import and register blueprints
     from app.routes.stations import stations_bp
