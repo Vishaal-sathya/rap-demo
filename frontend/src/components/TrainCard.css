@@ -1,0 +1,152 @@
+/* Combined route specific styles */
+.combined-route-card {
+  border-left: 6px solid #3498db;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.15);
+  transition: all 0.3s ease;
+}
+
+.combined-route-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.2);
+}
+
+.combined-journey-details {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.leg-section {
+  border: 2px solid #e8ecef;
+  border-radius: 12px;
+  padding: 18px;
+  background: white;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.leg-section:hover {
+  border-color: #3498db;
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.15);
+}
+
+.leg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f1f2f6;
+}
+
+.leg-train-name {
+  font-weight: 700;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+.leg-distance {
+  color: #7f8c8d;
+  font-size: 13px;
+  background: #ecf0f1;
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.leg-price {
+  color: #27ae60;
+  font-weight: 800;
+  font-size: 16px;
+  background: rgba(39, 174, 96, 0.1);
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.leg-journey {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.leg-time-section {
+  text-align: center;
+  flex: 1;
+}
+
+.leg-duration-section {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.leg-duration-section .duration-badge {
+  background: #3498db;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  margin: 0 10px;
+}
+
+.leg-duration-section .line {
+  flex: 1;
+  height: 2px;
+  background: #3498db;
+}
+
+.train-icon {
+  font-size: 16px;
+  margin: 0 10px;
+}
+
+.connection-break {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+  gap: 12px;
+  width: 100%;
+}
+
+.break-line {
+  flex: 1;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #3498db, transparent);
+  border-radius: 2px;
+}
+
+.connection-text {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+}
+
+@media (max-width: 768px) {
+  .leg-header {
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+  }
+  
+  .leg-journey {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .connection-text {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}

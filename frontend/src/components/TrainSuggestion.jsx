@@ -1,4 +1,5 @@
 import React from 'react';
+import TrainCard from './TrainCard';
 import './TrainSuggestion.css';
 
 const TrainSuggestion = ({ suggestions }) => {
@@ -7,51 +8,56 @@ const TrainSuggestion = ({ suggestions }) => {
   }
 
   return (
-    <div className="train-suggestions">
-      {suggestions.map((suggestion, index) => (
-        <div key={index} className="suggestion-card">
-          <div className="legs-container">
-            {suggestion.legs.map((leg, legIndex) => (
-              <div key={legIndex} className="leg-card">
-                <div className="train-info">
-                  <h3>{leg.train_name || leg.train_id}</h3>
-                </div>
-                <div className="route-info">
-                  <div className="stations">
-                    <span className="from">{leg.from_station}</span>
-                    <span className="arrow">→</span>
-                    <span className="to">{leg.to_station}</span>
-                  </div>
-                  <div className="timing">
-                    <div className="departure">
-                      <span className="time">{leg.departure_time}</span>
-                      <span className="date">{leg.departure_date}</span>
-                    </div>
-                    <div className="arrival">
-                      <span className="time">{leg.arrival_time}</span>
-                      <span className="date">{leg.arrival_date}</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="leg-details">
-                  <span className="distance">{leg.distance_km} km</span>
-                  <span className="price">₹{leg.price}</span>
-                </div>
-              </div>
-            ))}
+    <div className="train-suggestions-fullwidth">
+      {suggestions.slice(0, 10).map((suggestion, index) => {
+        // Transform suggestion data to match TrainCard props
+        const trainData = {
+          name: suggestion.legs.map(leg => leg.train_name).join(" + "),
+          id: `combined-${index}`,
+          price: suggestion.total_price,
+          distance: suggestion.total_distance_km,
+          departure: suggestion.legs[0].departure_time,
+          arrival: suggestion.legs[suggestion.legs.length - 1].arrival_time,
+          departureDate: suggestion.legs[0].departure_date,
+          arrivalDate: suggestion.legs[suggestion.legs.length - 1].arrival_date,
+          duration: suggestion.total_duration || 0,
+          sourceStation: suggestion.legs[0].from_station,
+          destinationStation: suggestion.legs[suggestion.legs.length - 1].to_station,
+          totalLegs: suggestion.legs.length,
+          journeyType: 'combined'
+        };
+
+        const searchParams = {
+          source: suggestion.legs[0].from_station,
+          destination: suggestion.legs[suggestion.legs.length - 1].to_station,
+          date: suggestion.legs[0].departure_date
+        };
+
+        // Transform legs data to match expected format
+        const transformedLegs = suggestion.legs.map(leg => ({
+          train_id: leg.train_id,
+          train_name: leg.train_name,
+          from_station: leg.from_station || leg.from,
+          to_station: leg.to_station || leg.to,
+          departure_date: leg.departure_date,
+          departure_time: leg.departure_time,
+          arrival_date: leg.arrival_date,
+          arrival_time: leg.arrival_time,
+          distance_km: leg.distance_km,
+          price: leg.price
+        }));
+
+        return (
+          <div key={index} className="combined-route-wrapper">
+            <TrainCard
+              train={trainData}
+              searchParams={searchParams}
+              isCombinedRoute={true}
+              legs={transformedLegs}
+            />
           </div>
-          <div className="suggestion-total">
-            <div className="total-item">
-              <span className="label">Total Distance:</span>
-              <span className="value">{suggestion.total_distance_km} km</span>
-            </div>
-            <div className="total-item">
-              <span className="label">Total Price:</span>
-              <span className="value">₹{suggestion.total_price}</span>
-            </div>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

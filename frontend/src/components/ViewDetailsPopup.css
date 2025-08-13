@@ -1,0 +1,773 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.popup-container {
+  background: white;
+  border-radius: 16px;
+  max-width: 950px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.3s ease-out;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 28px;
+  border-bottom: 2px solid #e8ecef;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 16px 16px 0 0;
+}
+
+.popup-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.close-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.close-button:hover {
+  background: rgba(231, 76, 60, 0.9);
+  transform: scale(1.1);
+}
+
+.popup-content {
+  padding: 28px;
+}
+
+.train-info-header {
+  text-align: center;
+  margin-bottom: 28px;
+  padding: 24px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  border-left: 5px solid #3498db;
+}
+
+.train-name {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.train-id {
+  margin: 0;
+  color: #7f8c8d;
+  font-size: 14px;
+  background: rgba(52, 152, 219, 0.1);
+  padding: 4px 12px;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+.journey-details-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.route-overview {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.route-stations {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.station-info {
+  text-align: center;
+  flex: 1;
+}
+
+.station-name {
+  font-weight: 800;
+  font-size: 20px;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.station-time {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #f1c40f;
+}
+
+.station-date {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.route-line {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  margin: 0 24px;
+}
+
+.line {
+  flex: 1;
+  height: 4px;
+  background: linear-gradient(to right, rgba(255,255,255,0.7), rgba(255,255,255,0.3));
+  border-radius: 2px;
+}
+
+.duration-info {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 12px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.journey-summary, .total-summary {
+  display: flex;
+  justify-content: space-around;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 24px;
+  border-radius: 12px;
+  border: 2px solid #dee2e6;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.summary-item {
+  text-align: center;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  min-width: 120px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.value {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  color: #2c3e50;
+}
+
+.value.price {
+  color: #27ae60;
+  font-size: 20px;
+}
+
+/* Combined Route Styles */
+.journey-details-popup.combined {
+  gap: 32px;
+}
+
+.route-summary-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.total-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.overview-item {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.overview-label {
+  display: block;
+  font-size: 13px;
+  opacity: 0.9;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.overview-value {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.overview-value.price {
+  font-size: 26px;
+  color: #f1c40f;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.combined-route-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.timeline-leg {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 16px;
+  padding: 28px;
+  border-left: 6px solid #3498db;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.timeline-leg:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.leg-header-detailed {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.leg-number {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.leg-train-info {
+  flex-grow: 1;
+  margin: 0 24px;
+  text-align: center;
+}
+
+.train-name-detailed {
+  margin: 0 0 6px 0;
+  font-size: 22px;
+  color: #2c3e50;
+  font-weight: 800;
+}
+
+.train-id-detailed {
+  background: linear-gradient(135deg, #ecf0f1, #d5dbdb);
+  padding: 6px 14px;
+  border-radius: 15px;
+  font-size: 12px;
+  color: #7f8c8d;
+  font-weight: 600;
+}
+
+.leg-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-item {
+  text-align: center;
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
+  min-width: 90px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  border-top: 3px solid #3498db;
+}
+
+.stat-label {
+  display: block;
+  font-size: 11px;
+  color: #7f8c8d;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.stat-value {
+  display: block;
+  font-size: 16px;
+  font-weight: 800;
+  color: #2c3e50;
+}
+
+.journey-tips {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  border: 2px solid #28a745;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 28px;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+}
+
+.journey-tips h5 {
+  margin: 0 0 16px 0;
+  color: #155724;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.journey-tips h5::before {
+  content: "💡";
+  font-size: 20px;
+}
+
+.journey-tips ul {
+  margin: 0;
+  padding-left: 24px;
+  color: #155724;
+}
+
+.journey-tips li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.journey-tips li::marker {
+  color: #28a745;
+}
+
+.popup-footer {
+  padding: 20px 28px;
+  border-top: 2px solid #e8ecef;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 0 0 16px 16px;
+}
+
+.close-btn {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 14px 36px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.close-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Journey Timeline Styles */
+.leg-journey-detailed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  border: 2px solid #e8ecef;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+}
+
+.departure-info, .arrival-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  padding: 16px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+  min-width: 200px;
+}
+
+.station-details {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.station-name-large {
+  font-size: 22px;
+  font-weight: 800;
+  color: #2c3e50;
+  margin-bottom: 6px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.3px;
+}
+
+.station-label {
+  font-size: 12px;
+  color: #7f8c8d;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  background: rgba(127, 140, 141, 0.1);
+  padding: 4px 12px;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+.time-details {
+  text-align: center;
+  background: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 3px solid #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+  min-width: 140px;
+}
+
+.time-large {
+  font-size: 26px;
+  font-weight: 800;
+  color: #3498db;
+  margin-bottom: 6px;
+  text-shadow: 0 1px 3px rgba(52, 152, 219, 0.3);
+  letter-spacing: 0.5px;
+}
+
+.date-detailed {
+  font-size: 13px;
+  color: #7f8c8d;
+  font-weight: 600;
+  line-height: 1.3;
+  background: rgba(127, 140, 141, 0.1);
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.journey-line-detailed {
+  display: flex;
+  align-items: center;
+  flex: 1.5;
+  margin: 0 24px;
+  position: relative;
+}
+
+.line-segment {
+  flex: 1;
+  height: 6px;
+  background: linear-gradient(to right, #3498db, #2980b9, #3498db);
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.line-segment::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: shimmer 2s infinite;
+}
+
+.journey-icon {
+  font-size: 28px;
+  margin: 0 16px;
+  background: white;
+  padding: 12px;
+  border-radius: 50%;
+  border: 4px solid #3498db;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+  animation: float 3s ease-in-out infinite;
+  z-index: 1;
+}
+
+.connection-detailed {
+  background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+  border: 3px solid #ffc107;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.connection-detailed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 3s infinite;
+}
+
+.connection-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.connection-icon {
+  font-size: 24px;
+  background: white;
+  padding: 8px;
+  border-radius: 50%;
+  border: 2px solid #ffc107;
+  animation: rotate 4s linear infinite;
+}
+
+.connection-title {
+  font-weight: 800;
+  color: #856404;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(133, 100, 4, 0.2);
+}
+
+.connection-body {
+  margin-left: 48px;
+  position: relative;
+  z-index: 1;
+}
+
+.connection-station {
+  font-weight: 700;
+  color: #856404;
+  margin-bottom: 8px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  border: 1px solid rgba(133, 100, 4, 0.3);
+}
+
+.connection-note {
+  font-size: 14px;
+  color: #6c757d;
+  font-style: italic;
+  line-height: 1.4;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border-left: 3px solid #ffc107;
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Enhanced responsive design */
+@media (max-width: 768px) {
+  .popup-container {
+    width: 98%;
+    max-height: 95vh;
+  }
+  
+  .total-overview {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  
+  .leg-header-detailed {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .leg-stats {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  
+  .leg-journey-detailed {
+    flex-direction: column;
+    gap: 20px;
+    padding: 16px;
+  }
+  
+  .departure-info, .arrival-info {
+    min-width: auto;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+  }
+  
+  .station-details {
+    text-align: left;
+    margin-bottom: 0;
+  }
+  
+  .time-details {
+    min-width: auto;
+    padding: 12px 16px;
+  }
+  
+  .journey-line-detailed {
+    margin: 0;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .line-segment {
+    height: 4px;
+    width: 100%;
+  }
+  
+  .journey-icon {
+    font-size: 24px;
+    padding: 8px;
+    margin: 0;
+  }
+  
+  .station-name-large {
+    font-size: 18px;
+  }
+  
+  .time-large {
+    font-size: 22px;
+  }
+  
+  .connection-body {
+    margin-left: 0;
+    margin-top: 12px;
+  }
+  
+  .connection-header {
+    justify-content: center;
+  }
+  
+  .connection-station,
+  .connection-note {
+    text-align: center;
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .station-name-large {
+    font-size: 16px;
+  }
+  
+  .time-large {
+    font-size: 20px;
+  }
+  
+  .time-details {
+    padding: 10px 12px;
+  }
+  
+  .departure-info, .arrival-info {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}

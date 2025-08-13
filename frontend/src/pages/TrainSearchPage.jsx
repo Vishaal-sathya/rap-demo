@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SearchForm from '../components/SearchForm';
 import SortFilterControls from '../components/SortFilterControls';
 import TrainCard from '../components/TrainCard';
+import TrainSuggestion from '../components/TrainSuggestion';
 import axios from 'axios';
 
 export default function TrainSearchPage() {
@@ -11,9 +12,11 @@ export default function TrainSearchPage() {
     destination: '',
     date: ''
   });
-  const [sortBy, setSortBy] = useState('price'); // 'price' or 'time'
+  const [sortBy, setSortBy] = useState('price_low'); // 'price' or 'time'
   const [hasSearched, setHasSearched] = useState(false);
   const [trains, setTrains] = useState([]);
+  const [combinedRoutes, setCombinedRoutes] = useState([]);
+
 
   // Fetch stations from backend on mount
   useEffect(() => {
@@ -43,9 +46,23 @@ export default function TrainSearchPage() {
       });
 
       setTrains(res.data.results || []);
+
+      // Fetch combined routes
+      const combinedRes = await axios.get('http://localhost:5000/trains/combined-route', {
+        params: {
+          source: params.source,
+          destination: params.destination,
+          date: params.date,
+          sort_by: sortBy
+        }
+      });
+      console.log(combinedRoutes);
+      
+      setCombinedRoutes(combinedRes.data.suggestions || []);
     } catch (err) {
       console.error('Error fetching trains:', err);
       setTrains([]);
+      setCombinedRoutes([]);
     }
   };
 
@@ -75,7 +92,7 @@ export default function TrainSearchPage() {
           {/* Train List */}
           <div className="train-list">
             {trains.length > 0 ? (
-              trains.map((train) => (
+              trains.slice(0, 10).map((train) => (
                 <TrainCard
                   key={train.train_id}
                   train={{
@@ -102,6 +119,12 @@ export default function TrainSearchPage() {
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Combined Routes Section */}
+          <div className="combined-routes-section">
+            <h2 className="combined-routes-title">Combined Route Suggestions</h2>
+            <TrainSuggestion suggestions={combinedRoutes} />
           </div>
         </>
       )}

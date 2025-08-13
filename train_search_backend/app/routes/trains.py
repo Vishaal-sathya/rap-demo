@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.extensions import mongo
 from app.config import Config
-from datetime import datetime
+from datetime import datetime, timedelta
 
 trains_bp = Blueprint("trains", __name__, url_prefix="/trains")
 
@@ -12,6 +12,7 @@ def search_trains():
     travel_date_str = request.args.get("date")  # Expected format: YYYY-MM-DD
     sort_by = request.args.get("sort_by")  # 'price' or 'time'
     print(sort_by)
+    print(source, destination, travel_date_str)
     if not source or not destination or not travel_date_str:
         return jsonify({"error": "source, destination, and date are required"}), 400
 
@@ -78,16 +79,12 @@ def search_trains():
 
 
 
-from datetime import datetime, timedelta
-from flask import request, jsonify
-from app.extensions import mongo
-from app.config import Config
-
 @trains_bp.route("/combined-route", methods=["GET"])
 def combined_route():
     source = request.args.get("source")
     destination = request.args.get("destination")
     travel_date_str = request.args.get("date")  # Expected YYYY-MM-DD
+    sort_by = request.args.get("sort_by", "price_low")  # Add sort parameter
 
     if not source or not destination or not travel_date_str:
         return jsonify({"error": "source, destination, and date are required"}), 400
@@ -102,14 +99,14 @@ def combined_route():
 
     for first_train in routes:
         stops1 = first_train.get("stops", [])
-        src_idx = next((i for i, s in enumerate(stops1) if s["station_code"] == source), None)
+        src_idx = next((i for i, s in enumerate(stops1) if s["station_name"] == source), None)
 
         if src_idx is None:
             continue
 
         # Try each possible connection station after source
         for connect_idx in range(src_idx + 1, len(stops1)):
-            connect_station = stops1[connect_idx]["station_code"]
+            connect_station = stops1[connect_idx]["station_name"]
             connect_arrival_time_str = stops1[connect_idx]["departure_time"]
 
             # Second-leg trains from connect_station to destination
@@ -118,8 +115,8 @@ def combined_route():
                     continue
 
                 stops2 = second_train.get("stops", [])
-                conn_src_idx = next((i for i, s in enumerate(stops2) if s["station_code"] == connect_station), None)
-                dest_idx = next((i for i, s in enumerate(stops2) if s["station_code"] == destination), None)
+                conn_src_idx = next((i for i, s in enumerate(stops2) if s["station_name"] == connect_station), None)
+                dest_idx = next((i for i, s in enumerate(stops2) if s["station_name"] == destination), None)
 
                 if conn_src_idx is None or dest_idx is None or dest_idx <= conn_src_idx:
                     continue
@@ -157,8 +154,8 @@ def combined_route():
                         {
                             "train_id": first_train["train_id"],
                             "train_name": first_train.get("train_name", ""),
-                            "from": source,
-                            "to": connect_station,
+                            "from_station": source,
+                            "to_station": connect_station,
                             "departure_date": first_dep_dt.strftime("%Y-%m-%d"),
                             "departure_time": first_dep_time_str,
                             "arrival_date": first_arr_dt.strftime("%Y-%m-%d"),
@@ -169,8 +166,8 @@ def combined_route():
                         {
                             "train_id": second_train["train_id"],
                             "train_name": second_train.get("train_name", ""),
-                            "from": connect_station,
-                            "to": destination,
+                            "from_station": connect_station,
+                            "to_station": destination,
                             "departure_date": second_dep_dt.strftime("%Y-%m-%d"),
                             "departure_time": second_dep_time_str,
                             "arrival_date": second_arr_dt.strftime("%Y-%m-%d"),
@@ -180,8 +177,22 @@ def combined_route():
                         }
                     ],
                     "total_distance_km": dist1 + dist2,
-                    "total_price": round(price1 + price2, 2)
+                    "total_price": round(price1 + price2, 2),
+                    "total_duration": int((second_arr_dt - first_dep_dt).total_seconds() // 60)
                 })
+
+    # Sort combined route suggestions
+    if sort_by == "price_low":
+        suggestions.sort(key=lambda x: x["total_price"])
+    elif sort_by == "price_high":
+        suggestions.sort(key=lambda x: x["total_price"], reverse=True)
+    elif sort_by == "duration_low":
+        suggestions.sort(key=lambda x: x["total_duration"])
+    elif sort_by == "duration_high":
+        suggestions.sort(key=lambda x: x["total_duration"], reverse=True)
+    else:
+        suggestions.sort(key=lambda x: datetime.strptime(x["legs"][0]["departure_time"], "%H:%M"))
+   
 
     return jsonify({"suggestions": suggestions}), 200
 
